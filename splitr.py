@@ -41,23 +41,12 @@ def splitr():
                 fileTwo.write(bytes([byteTwo]))
                 mainFileByte = mainFile.read(1)
 
-
-def theTupler(mainByte):
-    factors = []    # list containing every positive number less than our num
-    goodPairs = []   # contains the tuples that add up to our int
-    byteMe = mainByte[0]    # initializes our current byte as an integer
-    
-    while byteMe != 0:
-        byteMe -= 1
-        factors.append(byteMe)
-    # itertools does the hard work here and creates a list of tuples
-    raw_pairs = itertools.permutations(factors, 2)
-
-    # this routine checks if our tuples add up to the given byte 
-    for tuple in raw_pairs:
-        if (tuple[0] + tuple[1]) == (factors[0]+1):
-            goodPairs.append(tuple)
-    
+def theTupler(mainFileByte):
+    # create a range with every int less than our byte
+    factors = [i for i in range(0, mainFileByte[0])]
+    raw_pairs = itertools.permutations(factors, 2)  # create list of tuples
+    # this list comprehension checks if our tuples add up to the given byte 
+    goodPairs = [tuple for tuple in raw_pairs if(tuple[0] + tuple[1] == factors[-1]+1)]   
     final = random.choice(goodPairs)     # select a random tuple
     return final    # return a tuple which sums our byte
 
