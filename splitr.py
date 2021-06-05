@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 '''
-Splitr by Droogy
-----------------
-Splitr takes any file and splits it into two files, Splitr can also-
-rejoin these file fragments
+Erasr is an un-intended side-effect of testing splitr
+
+it seems to erase part of PNG files without corrupting them
 
 Usage:
 To split a file - ./splitr.py file.png
@@ -12,6 +11,13 @@ To rejoin a file - ./split.py -m
 import sys
 import itertools
 import random
+import os
+
+def houseClean():
+    files = ["thing1", "thing2", "reconstructed"]
+    for file in files:
+        if os.path.exists(file):
+            os.remove(file)
 
 def splitr():
     with open(sys.argv[1], "rb") as mainFile:
@@ -42,11 +48,8 @@ def splitr():
                 mainFileByte = mainFile.read(1)
 
 def theTupler(mainFileByte):
-    # create a range with every int less than our byte
-    factors = [i for i in range(0, mainFileByte[0])]
-    raw_pairs = itertools.permutations(factors, 2)  # create list of tuples
     # this list comprehension checks if our tuples add up to the given byte 
-    goodPairs = [tuple for tuple in raw_pairs if(tuple[0] + tuple[1] == factors[-1]+1)]   
+    goodPairs = [tuple for tuple in pruned_pairs if(tuple[0] + tuple[1] == mainFileByte[0])]   
     final = random.choice(goodPairs)     # select a random tuple
     return final    # return a tuple which sums our byte
 
@@ -64,13 +67,20 @@ def unSplitr():
                     byteTwo = fileTwo.read(1)
 
 def main():
-    # check if flag is set to merge, if not, run the split routine
-    if sys.argv[1] == "-m":
+    global factors, raw_pairs, pruned_pairs 
+    factors = [i for i in range(0, 130)]    # list we need to make permutations
+    raw_pairs = itertools.permutations(factors, 2)  # tupled permutations
+    pruned_pairs = [pair for pair in set(raw_pairs)]    # get rid of dupes
+    if sys.argv[1] == "-m":     # merge files if set
         print("[*] Merging")
         unSplitr()
     else:
-        print("[*] Splitting")
-        splitr()
+        houseClean()
+        try:
+            print("[*] Splitting")
+            splitr()
+        except IndexError:
+            pass
     print("Done!")
 
 if __name__ == "__main__":
