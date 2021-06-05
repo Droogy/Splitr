@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 '''
-Erasr is an un-intended side-effect of testing splitr
-
-it seems to erase part of PNG files without corrupting them
+Splitr by Droogy
+----------------
+Splitr takes any file and splits it into two files, Splitr can also-
+rejoin these file fragments
 
 Usage:
 To split a file - ./splitr.py file.png
